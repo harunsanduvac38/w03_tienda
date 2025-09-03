@@ -27,12 +27,11 @@ public class Producto implements Serializable{
 	private Fabricante fabricante;
 	
 	
-	public Producto(int idProducto, String producto, double precio, Fabricante fabricante) {
+	public Producto(int idProducto, String producto, double precio) {
 		super();
 		this.idProducto = idProducto;
 		this.producto = producto;
 		this.precio = precio;
-		this.fabricante = fabricante;
 	}
 
 

@@ -1,9 +1,8 @@
 package com.cursogetafe.tienda.tests;
 
-import java.awt.geom.QuadCurve2D;
-
 import com.cursogetafe.tienda.config.Config;
 import com.cursogetafe.tienda.modelo.Fabricante;
+import com.cursogetafe.tienda.persistencia.FabricanteDaoJPA;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -32,5 +31,16 @@ public class Test02 {
 		System.out.println(ob[0] + ": " + ob[1] + " Productos");
 	}
 	
+	
+	FabricanteDaoJPA f = new FabricanteDaoJPA();
+	
+	System.out.println(f.findById(5));
+	
+	System.out.println(f.findByIdLazy(5));
+	
+	System.out.println(f.findOnlyActive());
+	
+	System.out.println(f.findAll());
+
 	}
 }
