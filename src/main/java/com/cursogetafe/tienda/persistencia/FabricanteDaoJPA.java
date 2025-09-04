@@ -9,6 +9,7 @@ import com.cursogetafe.tienda.modelo.Producto;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 
 public class FabricanteDaoJPA implements FabricanteDao {
@@ -28,17 +29,18 @@ public class FabricanteDaoJPA implements FabricanteDao {
 
 	@Override
 	public void save(Fabricante fabricante) {
-		em = emf.createEntityManager();
+		 EntityManager em = emf.createEntityManager();
 		
-		try {
+		try(em) {
 			em.getTransaction().begin();
 			em.merge(fabricante);
 			em.getTransaction().commit();	
 		} catch (Exception e) {
 			e.printStackTrace();
 			em.getTransaction().rollback();
+			throw new PersistenceException("Algo salió mal!");
+		
 		}
-		em.close();
 			
 		
 			
@@ -68,10 +70,7 @@ public class FabricanteDaoJPA implements FabricanteDao {
 		TypedQuery<Fabricante> q = em.createQuery(jpql, Fabricante.class);
 		q.setParameter("id", idFabricante);
 		Fabricante buscado = q.getSingleResultOrNull();
-		for(Producto prod : buscado.getProductos()) {
-			System.out.println(prod);
-		}
-		
+	
 		em.close();
 		return buscado;
 	}

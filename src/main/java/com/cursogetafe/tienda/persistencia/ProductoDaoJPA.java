@@ -59,9 +59,9 @@ public class ProductoDaoJPA implements ProductoDao {
 
 	@Override
 	public void save(Producto p) {
-		em = emf.createEntityManager();
+		EntityManager em = emf.createEntityManager();
 		
-		try {
+		try(em) {
 			em.getTransaction().begin();
 			em.merge(p);
 			em.getTransaction().commit();
@@ -71,7 +71,7 @@ public class ProductoDaoJPA implements ProductoDao {
 			em.getTransaction().rollback();
 			throw new PersistenciaException();
 		}
-		em.close();
+		
 		
 	}
 	
