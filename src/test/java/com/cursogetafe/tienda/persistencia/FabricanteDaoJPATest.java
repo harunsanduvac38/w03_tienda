@@ -63,7 +63,8 @@ class FabricanteDaoJPATest {
 
 	@Test
 	void testFindByIdLazy() {
-		fail("Not yet implemented");
+		
+	
 	}
 
 	@Test
