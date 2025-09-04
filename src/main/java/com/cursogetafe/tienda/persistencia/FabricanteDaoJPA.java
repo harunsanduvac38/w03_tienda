@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.cursogetafe.tienda.config.Config;
 import com.cursogetafe.tienda.modelo.Fabricante;
+import com.cursogetafe.tienda.modelo.Producto;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -67,6 +68,10 @@ public class FabricanteDaoJPA implements FabricanteDao {
 		TypedQuery<Fabricante> q = em.createQuery(jpql, Fabricante.class);
 		q.setParameter("id", idFabricante);
 		Fabricante buscado = q.getSingleResultOrNull();
+		for(Producto prod : buscado.getProductos()) {
+			System.out.println(prod);
+		}
+		
 		em.close();
 		return buscado;
 	}

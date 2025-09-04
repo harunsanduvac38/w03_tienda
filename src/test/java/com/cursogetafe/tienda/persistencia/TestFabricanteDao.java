@@ -1,13 +1,13 @@
-package com.cursogetafe.tienda.modelo;
+package com.cursogetafe.tienda.persistencia;
 
-import com.cursogetafe.tienda.persistencia.FabricanteDaoJPA;
+import com.cursogetafe.tienda.modelo.Fabricante;
 
 public class TestFabricanteDao {
 	public static void main(String[] args) {
 		
 		FabricanteDaoJPA f = new FabricanteDaoJPA();
 		
-		System.out.println(f.findById(5));
+		System.out.println(f.findById(1));
 		
 		System.out.println(f.findByIdLazy(5));
 		

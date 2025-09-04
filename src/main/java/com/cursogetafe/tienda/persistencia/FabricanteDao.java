@@ -39,7 +39,7 @@ public interface FabricanteDao {
 	
 	/**
 	 * Opcional
-	 * Retorna todos los fabricantes que proporcionan algun producto
+	 * Retorna todos los fabricantes
 	 * La lista de productos no se utilizara, asi que es necesario que tenga un comportamiento Lazy
 	 * 
 	 * @return Set con los fabricantes
