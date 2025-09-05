@@ -1,0 +1,43 @@
+@import  url("general.css");
+
+#contPrincipal{
+  padding: 20px !important;
+}
+.cabecera{
+  color: #005959;
+  background-color: #c0c0c0;
+}
+
+hr{
+  width: 80%;
+}
+
+ul{
+  padding: 0;
+}
+
+li{
+  list-style: none;
+  margin: 10px 0px;
+  text-align: center;
+  color: #4adf6c;
+}
+
+li:hover{
+  background-color: #c0c0c0;
+  color: #0000a0;
+  border-radius: 5px;
+}
+
+a{
+  text-decoration: none;
+   color:#008080;
+}
+a:hover{
+  color: #004000;
+}
+
+
+
+
+
