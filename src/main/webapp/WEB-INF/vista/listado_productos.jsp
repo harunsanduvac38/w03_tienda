@@ -21,38 +21,28 @@
 			<button type="submit">Buscar</button>
 		</form>
 		
-		<table id="tabla_datos" >
-			<thead>
-				<tr>
-					<th>Descripcion</th>
-					<th>Precio</th>
-					<th>Fabricante</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>Legion pro 5i</td>
-					<td>1.999</td>
-					<td>Lenovo</td>
-				</tr>
-				<tr>
-					<td>Omen Max</td>
-					<td>2.234</td>
-					<td>HP</td>
-				</tr>
-				<tr>
-					<td>Alienware g8</td>
-					<td>1.567</td>
-					<td>Dell</td>
-				</tr>
-				<tr>
-					<td>Ordenador portatil</td>
-					<td>1.124</td>
-					<td>Sony</td>
-				</tr>
+		<c:if test="${not empty prods}">
+			<table id="tabla_datos" >
+				<thead>
+					<tr>
+						<th>Descripcion</th>
+						<th>Precio</th>
+						<th>Fabricante</th>
+					</tr>
+				</thead>
+				<tbody>
 				
-			</tbody>
-		</table>
+					<c:forEach var="prod" items="${prods}">
+						<tr>
+							<td>${prod.producto}</td>
+							<td>${prod.precio}</td>
+							<td>${prod.fabricante.fabricante}</td>
+						</tr>
+					</c:forEach>
+					
+				</tbody>
+			</table>
+		</c:if>
 		
 		<a href="${home}/menu_principal"><button>Volver</button></a>
 	</div>

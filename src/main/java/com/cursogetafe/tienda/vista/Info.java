@@ -27,11 +27,11 @@ public class Info extends HttpServlet {
 		out.println("req.getCharacterEncoding():: " + req.getCharacterEncoding());
 		out.println("req.getContentType():: " + req.getContentType());
 		out.println("req.getContextPath():: " + req.getContextPath());
-		out.println("(req.getLocalAddr():: " + req.getLocalAddr());
-		out.println("(req.getLocalPort():: " + req.getLocalPort());
+		out.println("req.getLocalAddr():: " + req.getLocalAddr());
+		out.println("req.getLocalPort():: " + req.getLocalPort());
 		out.println("req.getMethod():: " + req.getMethod());
 		out.println("req.getProtocol():: " + req.getProtocol());
-		out.println("(req.getRemoteAddr():: " + req.getRemoteAddr());
+		out.println("req.getRemoteAddr():: " + req.getRemoteAddr());
 		out.println("req.getRequestURI():: " + req.getRequestURI());
 		out.println("req.getPathInfo() :: " + req.getPathInfo());
 		out.println("req.getSession() :: " + req.getSession());
