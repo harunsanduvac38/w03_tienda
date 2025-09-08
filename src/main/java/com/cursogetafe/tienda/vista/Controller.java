@@ -36,6 +36,9 @@ public class Controller extends HttpServlet{
 		case "/listado_productos":
 			req.getRequestDispatcher("/WEB-INF/vista/listado_productos.jsp").forward(req, resp);			
 			break;
+		case "/alta_producto":
+			req.getRequestDispatcher("/WEB-INF/vista/alta_producto.jsp").forward(req, resp);
+			break;
 		}
 	}
 	
@@ -44,10 +47,11 @@ public class Controller extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String path = req.getPathInfo();
+		String descripcion;
 		
 		switch(path) {
 		case"/listado_productos":
-			String descripcion = req.getParameter("descripcion");
+			descripcion = req.getParameter("descripcion");
 			Set<Producto> prods;
 			if(descripcion != null && descripcion.length() > 0) {
 				prods = neg.getProductos(descripcion);
@@ -56,6 +60,15 @@ public class Controller extends HttpServlet{
 			}
 			req.setAttribute("prods", prods);
 			req.getRequestDispatcher("/WEB-INF/vista/listado_productos.jsp").forward(req, resp);
+			
+			break;
+		case "/alta_producto":
+			descripcion = req.getParameter("descripcion");
+			String precioStr =  req.getParameter("precio");
+			String idFabStr = req.getParameter("idFabricante");
+			
+			
+			
 			
 			break;
 			

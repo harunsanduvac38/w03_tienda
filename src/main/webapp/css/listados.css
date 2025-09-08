@@ -29,5 +29,6 @@ tbody tr:nth-child(odd){
 
 
 tr:hover{
-  background-color: #76d2ed !important;
+  background-color: #115350 !important;
+  color: #ffffff;
 }

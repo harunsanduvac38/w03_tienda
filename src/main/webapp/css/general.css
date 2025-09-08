@@ -43,7 +43,7 @@ button:hover{
   color: #004000;
 }
 
-input{
+input, select{
   display: block;
   margin: auto;
   padding: 10px;
