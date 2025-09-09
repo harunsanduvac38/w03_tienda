@@ -6,9 +6,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.cursogetafe.tienda.modelo.Fabricante;
 import com.cursogetafe.tienda.modelo.Producto;
+import com.cursogetafe.tienda.persistencia.FabricanteDao;
+import com.cursogetafe.tienda.persistencia.FabricanteDaoJPA;
 import com.cursogetafe.tienda.persistencia.ProductoDao;
 import com.cursogetafe.tienda.persistencia.ProductoDaoJPA;
+import com.cursogetafe.tienda.vista.Controller;
 
 
 
@@ -16,9 +20,11 @@ public class TiendaImpl implements Tienda{
 	
 	
 	private ProductoDao pDao;
+	private FabricanteDao fDao;
 	
 	public TiendaImpl() {
 		pDao = new ProductoDaoJPA();
+		fDao = new FabricanteDaoJPA();
 	}
 
 	@Override
@@ -33,6 +39,22 @@ public class TiendaImpl implements Tienda{
 		Set<Producto> resu = new TreeSet<Producto>(getComparatorProductoDescLambda());
 		resu.addAll(pDao.findByDescripcion(descripción));
 		return resu;
+	}
+	
+	public Set<Fabricante> getFabricantes() {
+		Set<Fabricante> resu = new TreeSet<Fabricante>(getComparatorFabricanteDesc());
+		resu.addAll(fDao.findAll());
+		return resu;
+	}
+	
+	public Fabricante getFabricante(int idFabricante) {
+		return fDao.findByIdLazy(idFabricante);
+	}
+	
+	@Override
+	public void crearProducto(Producto producto) {
+		pDao.save(producto);
+		
 		
 	}
 	
@@ -59,6 +81,11 @@ public class TiendaImpl implements Tienda{
 		return (p1, p2) -> p1.getIdProducto() - p2.getIdProducto();
 	};
 	
+	
+	private Comparator<Fabricante> getComparatorFabricanteDesc(){
+		return (f1, f2) -> Collator.getInstance(new Locale("es")).compare(f1.getFabricante(), f2.getFabricante());
+	}
+
 	
 	
 
