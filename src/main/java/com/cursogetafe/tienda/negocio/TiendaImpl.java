@@ -51,6 +51,15 @@ public class TiendaImpl implements Tienda{
 		return fDao.findByIdLazy(idFabricante);
 	}
 	
+	
+	@Override
+	public Set<Fabricante> getFabricantesActivos() {
+		Set<Fabricante> resu = new TreeSet<Fabricante>(getComparatorFabricanteDesc());
+		resu.addAll(fDao.findOnlyActive());	
+		return resu;
+	}
+	
+	
 	@Override
 	public void crearProducto(Producto producto) {
 		pDao.save(producto);
@@ -85,6 +94,7 @@ public class TiendaImpl implements Tienda{
 	private Comparator<Fabricante> getComparatorFabricanteDesc(){
 		return (f1, f2) -> Collator.getInstance(new Locale("es")).compare(f1.getFabricante(), f2.getFabricante());
 	}
+
 
 	
 	

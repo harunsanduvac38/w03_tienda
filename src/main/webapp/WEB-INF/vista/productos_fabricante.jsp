@@ -9,19 +9,37 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Productos</title>
 <link rel="stylesheet" type="text/css" href="${css}/producto.css">
+
+<script type="text/javascript">
+
+	window.onload = function() {
+		document.getElementById("idFabricante").addEventListener("change", 
+				function(){
+			this.form.submit();
+		}
+	);
+	}
+
+
+
+</script>
 </head>
 <body>
 	<header class="cabecera">
-		<h2>Busqueda de Productos</h2>
+		<h2>Busqueda de Productos por Fabricante</h2>
 	</header>
 	
 	<div id="contPrincipal">
-		<form action="${home}/listado_productos" method="post">
-			<input type="search" name="descripcion" placeholder="producto">
-			<button type="submit">Buscar</button>
+		<form action="${home}/productos_fabricante" method="post">
+			<select id="idFabricante" name="idFabricante">
+				<option hidden="hidden" value="">Seleccione Fabricante</option>
+				<c:forEach var = "fabricante" items="${fabs}">
+					<option value="${fabricante.idFabricante}">${fabricante.fabricante}</option>
+				</c:forEach>
+			</select>
 		</form>
 		
-		<c:if test="${not empty prods}">
+		<c:if test="${not empty fabs}">
 			<table id="tabla_datos" >
 				<thead>
 					<tr>
@@ -32,11 +50,11 @@
 				</thead>
 				<tbody>
 				
-					<c:forEach var="prod" items="${prods}">
+					<c:forEach var="prod" items="${fab.productos}">
 						<tr>
 							<td>${prod.producto}</td>
 							<td>${prod.precio}</td>
-							<td>${prod.fabricante.fabricante}</td>
+							
 						</tr>
 					</c:forEach>
 					

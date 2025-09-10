@@ -14,17 +14,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/tienda/*")
 public class Controller extends HttpServlet{
 	
 	private Tienda neg;
+	private String home;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 
 		String path = req.getPathInfo();
+		Set<Fabricante> fabs;
 		
 		switch(path) {
 		case "/informacion":
@@ -38,10 +41,25 @@ public class Controller extends HttpServlet{
 			req.getRequestDispatcher("/WEB-INF/vista/listado_productos.jsp").forward(req, resp);			
 			break;
 		case "/alta_producto":
-			Set<Fabricante> fabs = neg.getFabricantes();
+			fabs = neg.getFabricantes();
 			req.setAttribute("fabs", fabs);
 			req.getRequestDispatcher("/WEB-INF/vista/alta_producto.jsp").forward(req, resp);
 			break;
+		case "/alta_producto_ok":
+			req.getRequestDispatcher("/WEB-INF/vista/alta_producto_ok.jsp").forward(req, resp);
+			
+			break;
+		case "/alta_producto_error":
+			req.getRequestDispatcher("/WEB-INF/vista/alta_producto_error.jsp").forward(req, resp);
+			
+			break;
+		case "/productos_fabricante":
+			fabs = neg.getFabricantesActivos();
+			req.setAttribute("fabs", fabs);
+			req.getRequestDispatcher("/WEB-INF/vista/productos_fabricante.jsp").forward(req, resp);
+			
+			break;
+			
 		}
 	}
 	
@@ -50,7 +68,14 @@ public class Controller extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String path = req.getPathInfo();
+
+		
+		HttpSession sesion = req.getSession();
+		
+		
 		String descripcion;
+		String idFabStr;
+		String precioStr;
 		
 		
 		switch(path) {
@@ -68,8 +93,8 @@ public class Controller extends HttpServlet{
 			break;
 		case "/alta_producto":
 			descripcion = req.getParameter("descripcion");
-			String precioStr =  req.getParameter("precio");	
-			String idFabStr = req.getParameter("idFabricante");
+			precioStr =  req.getParameter("precio");	
+			idFabStr = req.getParameter("idFabricante");
 		
 			double precio;
 			Fabricante fab;
@@ -81,17 +106,19 @@ public class Controller extends HttpServlet{
 					&& isInteger(idFabStr)
 					&& (precio = Double.parseDouble(precioStr)) > 0
 					&& (fab = neg.getFabricante(Integer.parseInt(idFabStr))) != null) {
-				req.setAttribute("producto", descripcion);
+				
+				sesion.setAttribute("producto", descripcion);
 				
 				try {
 					Producto prod = new Producto(0, descripcion, Double.valueOf(precioStr));
 					prod.setFabricante(fab);
 					neg.crearProducto(prod);
 					
-					req.getRequestDispatcher("/WEB-INF/vista/alta_producto_ok.jsp").forward(req, resp);
+					resp.sendRedirect(home + "/alta_producto_ok");
+					
 				} catch (Exception e) {
-					e.printStackTrace();
-					req.getRequestDispatcher("/WEB-INF/vista/alta_producto_error.jsp").forward(req, resp);
+					
+					resp.sendRedirect(home + "/alta_producto_error");
 				}
 				
 			} else {
@@ -101,16 +128,17 @@ public class Controller extends HttpServlet{
 				System.out.println(idFabStr);
 				System.out.println("dio error");
 			}
+					
+			break;
+		case "/productos_fabricante":
 			
-			
-			
-		
-			System.out.println(descripcion);
-			System.out.println(precioStr);
+			idFabStr = req.getParameter("idFabricante");
 			System.out.println(idFabStr);
 			
-			break;
 			
+			
+			
+			break;
 			
 		}
 	}
@@ -123,7 +151,9 @@ public class Controller extends HttpServlet{
 
 		ServletContext app = getServletContext();
 		
-		app.setAttribute("home", app.getContextPath() + "/tienda");
+		home = app.getContextPath() + "/tienda";
+		
+		app.setAttribute("home", home);
 		app.setAttribute("css", app.getContextPath() + "/css");
 	}
 	

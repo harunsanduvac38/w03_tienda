@@ -16,7 +16,7 @@ body{
 
 #contPrincipal{
   margin: 0px auto;
-  width: 350px;
+  width: 420px;
   background-color: #eeeeee;
   padding: 20px 5px;
   box-shadow: 10px 8px 5px black;
@@ -33,14 +33,14 @@ button{
   padding: 10px;
   font-size: 1.05em;
   margin: 10px auto;
-  width: 80px;
+  width: 140px;
   border-radius: 7px;
   
 }
 
 button:hover{
   background-color: #247665;
-  color: #004000;
+  color: #ffffff !important;
 }
 
 input, select{

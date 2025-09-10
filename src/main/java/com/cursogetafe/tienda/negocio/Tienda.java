@@ -40,10 +40,17 @@ public interface Tienda {
 	Fabricante getFabricante(int idFabricante);
 	
 	
+	
 	/**
-	 * Crea un producto y guarda en la base de datos.
-	 * @param producto
-	 * 
+	 * Devuelve todos los fabricantes que proporcionan producto. Ordenados por su nombre.
+	 * @return Un set de fabricantes ordenados
+	 */
+	Set<Fabricante> getFabricantesActivos();
+	
+	
+	/**
+	 * Agrega un nuevo producto en la persistencia
+	 * @param p producto a agregar
 	 */
 	void crearProducto(Producto producto);
 }

@@ -18,7 +18,8 @@
 	
 	<div id="contPrincipal">
 	
-		<p>El producto <span id="prod">${producto}</span> se ha guardado correctamente!</p>
+		<p>El producto <span id="prod">${producto}</span> no se ha registrado!</p>
+		<p>El producto existe o ha habido un error!</p>
 		
 		<a href="${home}/alta_producto"><button>Más Productos</button></a>
 		<a href="${home}/menu_principal"><button>Menu Principal</button></a>
