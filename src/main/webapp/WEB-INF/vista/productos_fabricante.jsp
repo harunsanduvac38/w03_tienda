@@ -32,32 +32,32 @@
 	<div id="contPrincipal">
 		<form action="${home}/productos_fabricante" method="post">
 			<select id="idFabricante" name="idFabricante">
-				<option hidden="hidden" value="">Seleccione Fabricante</option>
+				<c:if test="${empty fab}">
+					<option hidden="hidden" value="">Seleccione Fabricante</option>
+				</c:if>
 				<c:forEach var = "fabricante" items="${fabs}">
-					<option value="${fabricante.idFabricante}">${fabricante.fabricante}</option>
+					<option value="${fabricante.idFabricante}" 
+					${fabricante.idFabricante == fab.idFabricante ? "selected='selected'" : ""}
+					>${fabricante.fabricante}</option>
 				</c:forEach>
 			</select>
 		</form>
 		
-		<c:if test="${not empty fabs}">
+		<c:if test="${not empty fab.productos}">
 			<table id="tabla_datos" >
 				<thead>
 					<tr>
 						<th>Descripcion</th>
 						<th>Precio</th>
-						<th>Fabricante</th>
 					</tr>
 				</thead>
 				<tbody>
-				
 					<c:forEach var="prod" items="${fab.productos}">
 						<tr>
 							<td>${prod.producto}</td>
-							<td>${prod.precio}</td>
-							
+							<td>${prod.precio}</td>	
 						</tr>
 					</c:forEach>
-					
 				</tbody>
 			</table>
 		</c:if>

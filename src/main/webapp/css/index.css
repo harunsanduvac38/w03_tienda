@@ -1,5 +1,9 @@
 @import  url("general.css");
 
+body{
+	background-color: #666666;
+}
+
 #contPrincipal{
   padding: 20px !important;
 }

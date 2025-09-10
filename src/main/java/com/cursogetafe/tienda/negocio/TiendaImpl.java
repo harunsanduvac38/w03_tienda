@@ -48,7 +48,7 @@ public class TiendaImpl implements Tienda{
 	}
 	
 	public Fabricante getFabricante(int idFabricante) {
-		return fDao.findByIdLazy(idFabricante);
+		return fDao.findById(idFabricante);
 	}
 	
 	
