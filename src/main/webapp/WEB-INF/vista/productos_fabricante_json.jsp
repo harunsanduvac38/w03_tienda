@@ -12,6 +12,9 @@
 
 <script type="text/javascript">
 
+let tabla;
+
+
 function solicitud(){
 	//Preparamos los parámetros para la petición Ej: idFabricante = 5
 	let param = "idFabricante=" + encodeURIComponent(document.getElementById("idFabricante").value);
@@ -38,23 +41,45 @@ function solicitud(){
 }
 
 function cargarTabla(req){
-	console.log(req.responseText);
+	
+	let productos=JSON.parse(req.responseText);
+	tabla.innerHTML="";
+	for(let i = 0; i < productos.length; i++) {
+		insertarFila(productos[i]);
+	}
+	document.querySelector("#tabla_datos").style.visibility = "visible";
+}
+
+function insertarFila(producto) {
+	let tr = document.createElement("tr");
+	let td = document.createElement("td");
+	tr.appendChild(td);
+	td.textContent = producto.producto;
+	
+	td = document.createElement("td");
+	tr.appendChild(td);
+	td.textContent = producto.precio;
+	
+	tabla.appendChild(tr);
 	
 }
 	
 
 window.onload = function() {
 	document.getElementById("idFabricante").addEventListener("change",solicitud);
+	tabla = document.querySelector("#tabla_datos tbody");
 		
 	}
 	
-	
-	
-	
-
-
 
 </script>
+
+<style type="text/css">
+	#tabla_datos {
+	visibility: hidden;
+	}	
+</style>
+
 </head>
 <body>
 	<header class="cabecera">
@@ -71,19 +96,19 @@ window.onload = function() {
 			</select>
 		</form>
 		
-		<c:if test="${not empty fab.productos}">
-			<table id="tabla_datos" >
-				<thead>
-					<tr>
-						<th>Descripcion</th>
-						<th>Precio</th>
-					</tr>
-				</thead>
-				<tbody>
-					
-				</tbody>
-			</table>
-		</c:if>
+		
+		<table id="tabla_datos" >
+			<thead>
+				<tr>
+					<th>Descripcion</th>
+					<th>Precio</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+		</table>
+		
 		
 		<a href="${home}/menu_principal"><button>Volver</button></a>
 	</div>

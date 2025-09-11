@@ -221,9 +221,5 @@ public class Controller extends HttpServlet{
 		sesion.removeAttribute("fabs");
 		sesion.removeAttribute("prods");
 	}
-	
-	
-	
-	
 
 }
