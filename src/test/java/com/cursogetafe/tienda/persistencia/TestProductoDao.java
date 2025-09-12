@@ -23,7 +23,7 @@ class TestProductoDao {
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		pDao = new ProductoDaoJPA();
+		pDao = new ProductoDaoImpl();
 	}
 
 	private int cantidadProductos(String sql) throws Exception{

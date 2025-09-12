@@ -10,6 +10,7 @@
         
         <class>com.cursogetafe.tienda.modelo.Fabricante</class>
         <class>com.cursogetafe.tienda.modelo.Producto</class>
+        <class>com.cursogetafe.tienda.modelo.Usuario</class>
         
 
         

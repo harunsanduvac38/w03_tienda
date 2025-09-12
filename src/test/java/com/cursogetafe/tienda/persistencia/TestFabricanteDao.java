@@ -27,7 +27,7 @@ class TestFabricanteDao {
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
-		fDao = new FabricanteDaoJPA();
+		fDao = new FabricanteDaoImpl();
 	}
 
 	@Test

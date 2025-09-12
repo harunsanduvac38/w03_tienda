@@ -1,7 +1,7 @@
 package com.cursogetafe.tienda.modelo;
 
 import com.cursogetafe.tienda.config.Config;
-import com.cursogetafe.tienda.persistencia.FabricanteDaoJPA;
+import com.cursogetafe.tienda.persistencia.FabricanteDaoImpl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

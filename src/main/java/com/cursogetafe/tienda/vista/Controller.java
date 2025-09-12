@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.cursogetafe.tienda.modelo.Fabricante;
 import com.cursogetafe.tienda.modelo.Producto;
+import com.cursogetafe.tienda.modelo.Usuario;
 import com.cursogetafe.tienda.negocio.Tienda;
 import com.cursogetafe.tienda.negocio.TiendaImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,12 @@ public class Controller extends HttpServlet{
 		Set<Fabricante> fabs;
 		
 		switch(path) {
+		case "/login":
+			req.getRequestDispatcher("/WEB-INF/vista/login.jsp").forward(req, resp);
+			break;
+		case "/registro_usuarios":
+			req.getRequestDispatcher("/WEB-INF/vista/registro_usuarios.jsp").forward(req, resp);
+			break;
 		case "/informacion":
 			req.setAttribute("origen", "el que te envio esto fuio yo, el Controlador!");
 			req.getRequestDispatcher("/WEB-INF/informacion").forward(req, resp);
@@ -86,9 +93,43 @@ public class Controller extends HttpServlet{
 		String idFabStr;
 		String precioStr;
 		Fabricante fab;
+		String usr, pwd;
 		
 		
 		switch(path) {
+		case "/login":
+			usr = req.getParameter("usr");
+			pwd = req.getParameter("pwd");
+			System.out.println(usr);
+			System.out.println(pwd);
+			break;
+		case "/registro_usuarios":
+			String nombre = req.getParameter("nombre");
+			usr = req.getParameter("usr");
+			String email = req.getParameter("email");
+			pwd = req.getParameter("pwd");
+			
+			if(!isEmpty(nombre)
+					&& !isEmpty(usr)
+					&& !isEmpty(email)
+					&& !isEmpty(pwd) 
+					&& checkPassword(pwd)) {
+				
+				Usuario nuevo = new Usuario(nombre.trim(), email.trim(), usr.trim(), pwd.trim());
+				
+				
+				if(neg.crearUsuario(nuevo)) {
+					sesion.setAttribute("resu", "ok");
+				} else {
+					sesion.setAttribute("resu", "error");
+				}
+				
+				resp.sendRedirect(home + "/registro_usuario_respuesta");
+			}else {
+				//todo mal!!
+			}
+			
+			break;
 		case"/listado_productos":
 			descripcion = req.getParameter("descripcion");
 			Set<Producto> prods;
@@ -222,4 +263,8 @@ public class Controller extends HttpServlet{
 		sesion.removeAttribute("prods");
 	}
 
+	
+	private boolean checkPassword(String pwd) {
+		return pwd.trim().length() > 5;
+	}
 }

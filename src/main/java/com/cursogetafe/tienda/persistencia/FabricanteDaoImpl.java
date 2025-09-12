@@ -12,16 +12,16 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 
-public class FabricanteDaoJPA implements FabricanteDao {
+public class FabricanteDaoImpl implements FabricanteDao {
 	
 	EntityManagerFactory emf;
 	EntityManager em;
 	
-	public FabricanteDaoJPA() {
+	public FabricanteDaoImpl() {
 		emf = Config.getEmf();
 	}
 	
-	public FabricanteDaoJPA(EntityManagerFactory emf) {
+	public FabricanteDaoImpl(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 	

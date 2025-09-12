@@ -2,7 +2,7 @@ package com.cursogetafe.tienda.tests;
 
 import com.cursogetafe.tienda.config.Config;
 import com.cursogetafe.tienda.modelo.Fabricante;
-import com.cursogetafe.tienda.persistencia.FabricanteDaoJPA;
+import com.cursogetafe.tienda.persistencia.FabricanteDaoImpl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -32,7 +32,7 @@ public class Test02 {
 //	}
 	
 	
-	FabricanteDaoJPA f = new FabricanteDaoJPA();
+	FabricanteDaoImpl f = new FabricanteDaoImpl();
 	
 	System.out.println(f.findById(5));
 	

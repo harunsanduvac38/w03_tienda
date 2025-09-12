@@ -11,16 +11,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 
-public class ProductoDaoJPA implements ProductoDao {
+public class ProductoDaoImpl implements ProductoDao {
 	
 	private EntityManagerFactory emf;
 	EntityManager em;
 	
-	public ProductoDaoJPA() {
+	public ProductoDaoImpl() {
 		emf = Config.getEmf();
 	}
 	
-	public ProductoDaoJPA(EntityManagerFactory emf) {
+	public ProductoDaoImpl(EntityManagerFactory emf) {
 		this.emf = emf;
 	}
 

@@ -8,10 +8,13 @@ import java.util.TreeSet;
 
 import com.cursogetafe.tienda.modelo.Fabricante;
 import com.cursogetafe.tienda.modelo.Producto;
+import com.cursogetafe.tienda.modelo.Usuario;
 import com.cursogetafe.tienda.persistencia.FabricanteDao;
-import com.cursogetafe.tienda.persistencia.FabricanteDaoJPA;
+import com.cursogetafe.tienda.persistencia.FabricanteDaoImpl;
 import com.cursogetafe.tienda.persistencia.ProductoDao;
-import com.cursogetafe.tienda.persistencia.ProductoDaoJPA;
+import com.cursogetafe.tienda.persistencia.ProductoDaoImpl;
+import com.cursogetafe.tienda.persistencia.UsuarioDao;
+import com.cursogetafe.tienda.persistencia.UsuarioDaoImpl;
 import com.cursogetafe.tienda.vista.Controller;
 
 
@@ -21,10 +24,12 @@ public class TiendaImpl implements Tienda{
 	
 	private ProductoDao pDao;
 	private FabricanteDao fDao;
+	private UsuarioDao uDao;
 	
 	public TiendaImpl() {
-		pDao = new ProductoDaoJPA();
-		fDao = new FabricanteDaoJPA();
+		pDao = new ProductoDaoImpl();
+		fDao = new FabricanteDaoImpl();
+		uDao = new UsuarioDaoImpl();
 	}
 
 	@Override
@@ -93,6 +98,18 @@ public class TiendaImpl implements Tienda{
 	
 	private Comparator<Fabricante> getComparatorFabricanteDesc(){
 		return (f1, f2) -> Collator.getInstance(new Locale("es")).compare(f1.getFabricante(), f2.getFabricante());
+	}
+
+	@Override
+	public boolean crearUsuario(Usuario u) {
+		
+		return uDao.save(u);
+	}
+
+	@Override
+	public Usuario validaUsuario(String usr, String pwd) {
+		
+		return uDao.valida(usr, pwd);
 	}
 
 

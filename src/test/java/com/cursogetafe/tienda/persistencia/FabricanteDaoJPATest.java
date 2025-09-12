@@ -30,7 +30,7 @@ class FabricanteDaoJPATest {
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("tiendaTest");
-		fabDao = new FabricanteDaoJPA(emf);
+		fabDao = new FabricanteDaoImpl(emf);
 		
 	}
 
