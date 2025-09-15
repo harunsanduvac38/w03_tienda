@@ -1,6 +1,7 @@
 package com.cursogetafe.tienda.vista;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.util.Set;
 
 import com.cursogetafe.tienda.modelo.Fabricante;
@@ -33,51 +34,64 @@ public class Controller extends HttpServlet{
 		String path = req.getPathInfo();
 		Set<Fabricante> fabs;
 		
-		switch(path) {
-		case "/login":
-			req.getRequestDispatcher("/WEB-INF/vista/login.jsp").forward(req, resp);
-			break;
-		case "/registro_usuarios":
-			req.getRequestDispatcher("/WEB-INF/vista/registro_usuarios.jsp").forward(req, resp);
-			break;
-		case "/registro_usuarios_respuesta":
-			req.getRequestDispatcher("/WEB-INF/vista/registro_usuarios_respuesta.jsp").forward(req, resp);
-			break;
-		case "/informacion":
-			req.setAttribute("origen", "el que te envio esto fuio yo, el Controlador!");
-			req.getRequestDispatcher("/WEB-INF/informacion").forward(req, resp);
-			break;
-		case"/menu_principal":
-			req.getRequestDispatcher("/WEB-INF/vista/menu_principal.jsp").forward(req, resp);
+		if(sesionIniciada(sesion)) {
+			switch(path) {
+			
+			case "/informacion":
+				req.setAttribute("origen", "el que te envio esto fuio yo, el Controlador!");
+				req.getRequestDispatcher("/WEB-INF/informacion").forward(req, resp);
+				break;
+			case"/menu_principal":
+				req.getRequestDispatcher("/WEB-INF/vista/menu_principal.jsp").forward(req, resp);
 
-			eliminaDatosSesion(sesion);
-			break;
-		case "/listado_productos":
-			req.getRequestDispatcher("/WEB-INF/vista/listado_productos.jsp").forward(req, resp);			
-			break;
-		case "/alta_producto":
-			fabs = neg.getFabricantes();
-			req.setAttribute("fabs", fabs);
-			req.getRequestDispatcher("/WEB-INF/vista/alta_producto.jsp").forward(req, resp);
-			break;
-		case "/alta_producto_ok":
-			req.getRequestDispatcher("/WEB-INF/vista/alta_producto_ok.jsp").forward(req, resp);
+				eliminaDatosSesion(sesion);
+				break;
+			case "/listado_productos":
+				req.getRequestDispatcher("/WEB-INF/vista/listado_productos.jsp").forward(req, resp);			
+				break;
+			case "/alta_producto":
+				fabs = neg.getFabricantes();
+				req.setAttribute("fabs", fabs);
+				req.getRequestDispatcher("/WEB-INF/vista/alta_producto.jsp").forward(req, resp);
+				break;
+			case "/alta_producto_ok":
+				req.getRequestDispatcher("/WEB-INF/vista/alta_producto_ok.jsp").forward(req, resp);
+				
+				break;
+			case "/alta_producto_error":
+				req.getRequestDispatcher("/WEB-INF/vista/alta_producto_error.jsp").forward(req, resp);
+				break;
+			case "/productos_fabricante":
+				fabs = neg.getFabricantesActivos();
+				req.setAttribute("fabs", fabs);
+				req.getRequestDispatcher("/WEB-INF/vista/productos_fabricante.jsp").forward(req, resp);
+				break;
+			case "/productos_fabricante_json":
+				fabs = neg.getFabricantesActivos();
+				req.setAttribute("fabs", fabs);
+				req.getRequestDispatcher("/WEB-INF/vista/productos_fabricante_json.jsp").forward(req, resp);
+				break;
+			case "/cerrar_sesion":
+			default:
+				login(req, resp);
+				
+			}
 			
-			break;
-		case "/alta_producto_error":
-			req.getRequestDispatcher("/WEB-INF/vista/alta_producto_error.jsp").forward(req, resp);
-			break;
-		case "/productos_fabricante":
-			fabs = neg.getFabricantesActivos();
-			req.setAttribute("fabs", fabs);
-			req.getRequestDispatcher("/WEB-INF/vista/productos_fabricante.jsp").forward(req, resp);
-			break;
-		case "/productos_fabricante_json":
-			fabs = neg.getFabricantesActivos();
-			req.setAttribute("fabs", fabs);
-			req.getRequestDispatcher("/WEB-INF/vista/productos_fabricante_json.jsp").forward(req, resp);
-			break;
-			
+		}else {
+			switch(path) {
+			case "/login":
+				req.getRequestDispatcher("/WEB-INF/vista/login.jsp").forward(req, resp);
+				break;
+			case "/registro_usuarios":
+				req.getRequestDispatcher("/WEB-INF/vista/registro_usuarios.jsp").forward(req, resp);
+				break;
+			case "/registro_usuarios_respuesta":
+				req.getRequestDispatcher("/WEB-INF/vista/registro_usuarios_respuesta.jsp").forward(req, resp);
+				break;
+			default:
+				login(req, resp);
+				
+			}
 		}
 	}
 	
@@ -103,8 +117,24 @@ public class Controller extends HttpServlet{
 		case "/login":
 			usr = req.getParameter("usr");
 			pwd = req.getParameter("pwd");
-			System.out.println(usr);
-			System.out.println(pwd);
+			Usuario actual;
+			
+			if(!isEmpty(usr) && !isEmpty(pwd)) {
+				if((actual = neg.validaUsuario(usr, pwd)) != null) {
+					if((actual.isEnabled())) {
+						sesion.setAttribute("usuario", actual);
+						resp.sendRedirect(home + "/menu_principal");
+					}else {
+						sesion.setAttribute("error", "disabled");
+						resp.sendRedirect(home + "/login");
+					}
+				}else {
+					sesion.setAttribute("error", "credenciales");
+					resp.sendRedirect(home + "/login");
+				}
+			}else {
+				
+			}
 			break;
 		case "/registro_usuarios":
 			String nombre = req.getParameter("nombre");
@@ -272,5 +302,19 @@ public class Controller extends HttpServlet{
 	
 	private boolean checkPassword(String pwd) {
 		return pwd.trim().length() > 5;
+	}
+	
+	
+	private boolean sesionIniciada(HttpSession sesion) {
+		return sesion.getAttribute("usuario") != null;
+	}
+	
+	private void cerrarSesion(HttpSession sesion) {
+		sesion.invalidate();
+	}
+	
+	private void login(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		cerrarSesion(req.getSession());
+		resp.sendRedirect(home + "/login");
 	}
 }

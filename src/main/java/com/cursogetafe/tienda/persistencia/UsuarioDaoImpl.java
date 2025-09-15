@@ -59,10 +59,9 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		TypedQuery<Usuario> q = em.createQuery(jpql, Usuario.class);
 		q.setParameter("usr", usuario);
 		
-		password = BCrypt.withDefaults().hashToString(12, password.toCharArray());
 		
 		buscado = q.getSingleResultOrNull();
-		if(buscado == null || !password.equals(buscado.getPassword())) {
+		if(buscado == null || !BCrypt.verifyer().verify(password.toCharArray(), buscado.getPassword()).verified) {
 			buscado = null;
 		}
 		em.close();

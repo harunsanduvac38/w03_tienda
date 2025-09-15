@@ -15,7 +15,6 @@ import com.cursogetafe.tienda.persistencia.ProductoDao;
 import com.cursogetafe.tienda.persistencia.ProductoDaoImpl;
 import com.cursogetafe.tienda.persistencia.UsuarioDao;
 import com.cursogetafe.tienda.persistencia.UsuarioDaoImpl;
-import com.cursogetafe.tienda.vista.Controller;
 
 
 

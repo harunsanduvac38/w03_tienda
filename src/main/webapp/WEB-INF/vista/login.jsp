@@ -54,7 +54,10 @@
 		</form>
 		
 		
-		<p id="error">&nbsp;</p>
+		<p id="error">&nbsp;
+			<c:if test="${error eq 'credenciales'}">Credenciales Incorrectas!</c:if>
+			<c:if test="${error eq 'disabled'}">El usuario está bloqueado!</c:if>
+		</p>
 	</div>
 </body>
 </html>
