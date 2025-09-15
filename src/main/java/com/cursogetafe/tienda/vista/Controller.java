@@ -101,157 +101,159 @@ public class Controller extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		String path = req.getPathInfo();
-
-		
 		HttpSession sesion = req.getSession();
 		
-		
-		String descripcion;
-		String idFabStr;
-		String precioStr;
-		Fabricante fab;
-		String usr, pwd;
-		
-		
-		switch(path) {
-		case "/login":
-			usr = req.getParameter("usr");
-			pwd = req.getParameter("pwd");
-			Usuario actual;
+		if(sesionIniciada(sesion)) {
+
+			String descripcion;
+			String idFabStr;
+			String precioStr;
+			Fabricante fab;
 			
-			if(!isEmpty(usr) && !isEmpty(pwd)) {
-				if((actual = neg.validaUsuario(usr, pwd)) != null) {
-					if((actual.isEnabled())) {
-						sesion.setAttribute("usuario", actual);
-						resp.sendRedirect(home + "/menu_principal");
+			
+			switch(path) {
+			case"/listado_productos":
+				descripcion = req.getParameter("descripcion");
+				Set<Producto> prods;
+				if(descripcion != null && descripcion.length() > 0) {
+					prods = neg.getProductos(descripcion);
+				}else {
+					prods = neg.getProductos();
+				}
+				req.setAttribute("prods", prods);
+				req.getRequestDispatcher("/WEB-INF/vista/listado_productos.jsp").forward(req, resp);
+				
+				break;
+			case "/alta_producto":
+				descripcion = req.getParameter("descripcion");
+				precioStr =  req.getParameter("precio");	
+				idFabStr = req.getParameter("idFabricante");
+			
+				double precio;
+				
+				
+				if(!isEmpty(descripcion)
+						&& !isEmpty(precioStr)
+						&& !isEmpty(idFabStr)
+						&& isDouble(precioStr)
+						&& isInteger(idFabStr)
+						&& (precio = Double.parseDouble(precioStr)) > 0
+						&& (fab = neg.getFabricante(Integer.parseInt(idFabStr))) != null) {
+					
+					sesion.setAttribute("producto", descripcion);
+					
+					try {
+						Producto prod = new Producto(0, descripcion, Double.valueOf(precioStr));
+						prod.setFabricante(fab);
+						neg.crearProducto(prod);
+						
+						resp.sendRedirect(home + "/alta_producto_ok");
+						
+					} catch (Exception e) {
+						
+						resp.sendRedirect(home + "/alta_producto_error");
+					}
+					
+				} else {
+					login(req, resp);
+				}
+						
+				break;
+			case "/productos_fabricante":
+				
+				idFabStr = req.getParameter("idFabricante");
+				if(!isEmpty(idFabStr)
+					&& isInteger(idFabStr)
+					&& (fab = neg.getFabricante(Integer.valueOf(idFabStr))) != null) {
+					
+					sesion.setAttribute("fab", fab);
+					resp.sendRedirect(home + "/productos_fabricante");
+				
+					
+				} else {
+					login(req, resp);
+				}
+				break;
+			case "/productos_fabricante_json_respuesta":
+				idFabStr = req.getParameter("idFabricante");
+				if(!isEmpty(idFabStr)
+					&& isInteger(idFabStr)
+					&& (fab = neg.getFabricante(Integer.valueOf(idFabStr))) != null) {
+					
+					ObjectMapper mapper = new ObjectMapper();
+					String json = mapper.writeValueAsString(fab.getProductos());
+					resp.setContentType("application/json;charset=UTF-8");
+					resp.getWriter().println(json);
+				
+					
+				} else {
+					login(req, resp);
+				}
+				break;
+				
+			default:
+				login(req, resp);
+			}
+
+		}else {
+		
+			String usr, pwd;
+
+			switch(path) {
+			case "/login":
+				usr = req.getParameter("usr");
+				pwd = req.getParameter("pwd");
+				Usuario actual;
+				
+				if(!isEmpty(usr) && !isEmpty(pwd)) {
+					if((actual = neg.validaUsuario(usr, pwd)) != null) {
+						if((actual.isEnabled())) {
+							sesion.setAttribute("usuario", actual);
+							resp.sendRedirect(home + "/menu_principal");
+						}else {
+							sesion.setAttribute("error", "disabled");
+							resp.sendRedirect(home + "/login");
+						}
 					}else {
-						sesion.setAttribute("error", "disabled");
+						sesion.setAttribute("error", "credenciales");
 						resp.sendRedirect(home + "/login");
 					}
 				}else {
-					sesion.setAttribute("error", "credenciales");
-					resp.sendRedirect(home + "/login");
+					login(req, resp);
 				}
-			}else {
+				break;
+			case "/registro_usuarios":
+				String nombre = req.getParameter("nombre");
+				usr = req.getParameter("usr");
+				String email = req.getParameter("email");
+				pwd = req.getParameter("pwd");
 				
-			}
-			break;
-		case "/registro_usuarios":
-			String nombre = req.getParameter("nombre");
-			usr = req.getParameter("usr");
-			String email = req.getParameter("email");
-			pwd = req.getParameter("pwd");
-			
-			if(!isEmpty(nombre)
-					&& !isEmpty(usr)
-					&& !isEmpty(email)
-					&& !isEmpty(pwd) 
-					&& checkPassword(pwd)) {
-				
-				Usuario nuevo = new Usuario(nombre.trim(), email.trim(), usr.trim(), pwd.trim());
-				sesion.setAttribute("nombreUsuario", nombre);
-				
-				try {
-					if(neg.crearUsuario(nuevo)) {
-						sesion.setAttribute("resu", "ok");
-					} else {
-						sesion.setAttribute("resu", "error");
+				if(!isEmpty(nombre)
+						&& !isEmpty(usr)
+						&& !isEmpty(email)
+						&& !isEmpty(pwd) 
+						&& checkPassword(pwd)) {
+					
+					Usuario nuevo = new Usuario(nombre.trim(), email.trim(), usr.trim(), pwd.trim());
+					sesion.setAttribute("nombreUsuario", nombre);
+					
+					try {
+						if(neg.crearUsuario(nuevo)) {
+							sesion.setAttribute("resu", "ok");
+						} else {
+							sesion.setAttribute("resu", "error");
+						}
+					} catch (Exception e) {
+						sesion.setAttribute("resu", "existe");
 					}
-				} catch (Exception e) {
-					sesion.setAttribute("resu", "existe");
+					resp.sendRedirect(home + "/registro_usuarios_respuesta");
+				}else {
+					login(req, resp);
 				}
-				resp.sendRedirect(home + "/registro_usuarios_respuesta");
-			}else {
-				//todo mal!!
+				break;
+				default:
+					login(req, resp);
 			}
-			
-			break;
-		case"/listado_productos":
-			descripcion = req.getParameter("descripcion");
-			Set<Producto> prods;
-			if(descripcion != null && descripcion.length() > 0) {
-				prods = neg.getProductos(descripcion);
-			}else {
-				prods = neg.getProductos();
-			}
-			req.setAttribute("prods", prods);
-			req.getRequestDispatcher("/WEB-INF/vista/listado_productos.jsp").forward(req, resp);
-			
-			break;
-		case "/alta_producto":
-			descripcion = req.getParameter("descripcion");
-			precioStr =  req.getParameter("precio");	
-			idFabStr = req.getParameter("idFabricante");
-		
-			double precio;
-			
-			
-			if(!isEmpty(descripcion)
-					&& !isEmpty(precioStr)
-					&& !isEmpty(idFabStr)
-					&& isDouble(precioStr)
-					&& isInteger(idFabStr)
-					&& (precio = Double.parseDouble(precioStr)) > 0
-					&& (fab = neg.getFabricante(Integer.parseInt(idFabStr))) != null) {
-				
-				sesion.setAttribute("producto", descripcion);
-				
-				try {
-					Producto prod = new Producto(0, descripcion, Double.valueOf(precioStr));
-					prod.setFabricante(fab);
-					neg.crearProducto(prod);
-					
-					resp.sendRedirect(home + "/alta_producto_ok");
-					
-				} catch (Exception e) {
-					
-					resp.sendRedirect(home + "/alta_producto_error");
-				}
-				
-			} else {
-				//cerrar sessión!!
-				System.out.println(descripcion);
-				System.out.println(precioStr);
-				System.out.println(idFabStr);
-				System.out.println("dio error");
-			}
-					
-			break;
-		case "/productos_fabricante":
-			
-			idFabStr = req.getParameter("idFabricante");
-			if(!isEmpty(idFabStr)
-				&& isInteger(idFabStr)
-				&& (fab = neg.getFabricante(Integer.valueOf(idFabStr))) != null) {
-				
-				sesion.setAttribute("fab", fab);
-				resp.sendRedirect(home + "/productos_fabricante");
-			
-				
-			} else {
-				//cerrar sesion!!
-				System.out.println(idFabStr);
-				System.out.println("dio error");
-			}
-			break;
-		case "/productos_fabricante_json_respuesta":
-			idFabStr = req.getParameter("idFabricante");
-			if(!isEmpty(idFabStr)
-				&& isInteger(idFabStr)
-				&& (fab = neg.getFabricante(Integer.valueOf(idFabStr))) != null) {
-				
-				ObjectMapper mapper = new ObjectMapper();
-				String json = mapper.writeValueAsString(fab.getProductos());
-				resp.setContentType("application/json;charset=UTF-8");
-				resp.getWriter().println(json);
-			
-				
-			} else {
-				//cerrar sesion!!
-				System.out.println(idFabStr);
-				System.out.println("dio error");
-			}
-			break;
 		}
 	}
 	
